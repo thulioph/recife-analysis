@@ -49,7 +49,7 @@ class App extends React.Component {
     const { 
       allRecords, allMayorEntry, 
       allViceMayorEntry, allPaidValue,
-      keyword
+      modalIsActive, modalContent
     } = this.props;
 
     return (
@@ -69,7 +69,10 @@ class App extends React.Component {
 
         <GraphicBar />
         
-        <Modal />
+        <Modal 
+          isActive={modalIsActive} 
+          content={modalContent}
+        />
       </div>
     );
   }
@@ -84,6 +87,7 @@ export default connect(
     allViceMayorEntry: state.table.allViceMayorEntry,
     allPaidValue: state.table.allPaidValue,
     year: state.search.year,
-    keyword: state.search.keyword,
+    modalIsActive: state.system.modalIsActive,
+    modalContent: state.system.modalContent
   })
 )(App);

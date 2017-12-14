@@ -1,14 +1,23 @@
 import React from 'react';
 
+import store from '../../store';
+import { displayModal, updateModalContent } from '../../actions/system';
+
 // ====
 
 class Table extends React.Component {
     handleClick(obj) {
-        console.table(obj);
+        store.dispatch(
+            updateModalContent(obj)
+        );
+
+        store.dispatch(
+            displayModal(true)
+        );
     }
 
     buildPaidValue(value) {
-        return Number(parseInt(value)).toLocaleString("pt-BR", {
+        return Number(parseInt(value, 10)).toLocaleString("pt-BR", {
             minimumFractionDigits: 2, style: 'currency', currency: 'BRL'
         });
     }

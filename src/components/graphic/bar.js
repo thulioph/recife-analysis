@@ -27,7 +27,7 @@ class GraphicBar extends React.Component {
 
     buildRecordsGraphic(arr) {
         x.domain(arr.map((obj) => obj.mes_movimentacao));
-        y.domain([0, d3.max(arr, ((obj) => parseInt(obj.valor_pago)))]);
+        y.domain([0, d3.max(arr, ((obj) => parseInt(obj.valor_pago, 10)))]);
 
         // add the rectangles
         viz
@@ -38,10 +38,10 @@ class GraphicBar extends React.Component {
             .attr('class', 'bar')
             .attr('x', (obj) => x(obj.mes_movimentacao))
             .attr('width', x.bandwidth())
-            .attr('y', (obj) => y(parseInt(obj.valor_pago)))
-            .attr('height', (obj) => this.buildHeightBar(parseInt(obj.valor_pago)))
+            .attr('y', (obj) => y(parseInt(obj.valor_pago, 10)))
+            .attr('height', (obj) => this.buildHeightBar(parseInt(obj.valor_pago, 10)))
             .style('fill', (obj) => {
-                if (parseInt(obj.valor_pago) <= 0) {
+                if (parseInt(obj.valor_pago, 10) <= 0) {
                     return '#F00'; // negative
                 }
             })

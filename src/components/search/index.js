@@ -26,7 +26,6 @@ class Search extends React.Component {
         );
 
         const allPaidValues = this.records.totalPaidValues(arr);
-        console.warn('allPaidValues', allPaidValues);
         store.dispatch(updatePaidValue(allPaidValues));
 
         const totalByVicePrefeito = this.records.totalByViceMayor(arr);
