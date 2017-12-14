@@ -1,9 +1,6 @@
 class Records {
-    constructor() {}
-
     totalPaidValues(arr) {
-        console.warn(arr);
-        return arr.map((el) => Number(parseInt(el.valor_pago))).reduce((a, b) => a + b, 0);
+        return arr.map((el) => Number(parseInt(el.valor_pago, 10))).reduce((a, b) => a + b, 0);
     }
 
     orderByMonth(arr) {
