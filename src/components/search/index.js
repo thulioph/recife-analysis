@@ -1,19 +1,59 @@
 import React from 'react';
 
+import store from '../../store';
+import { updateKeyword, updateYear } from '../../actions/search';
+import {
+    clearRecords, addNewRecord, addMayorEntry,
+    addViceMayorEntry, updatePaidValue
+} from '../../actions/table';
+
+import RecifeApi from '../../utils/api/recife';
+import Records from '../../utils/records';
+
 // ====
 
 class Search extends React.Component {
-    state = {
-        year: null,
-        keyword: null
-    };
+    constructor(props) {
+        super(props);
+        
+        this.api = new RecifeApi();
+        this.records = new Records();
+    }
+
+    handleResources(arr) {
+        store.dispatch(
+            clearRecords()
+        );
+
+        const allPaidValues = this.records.totalPaidValues(arr);
+        console.warn('allPaidValues', allPaidValues);
+        store.dispatch(updatePaidValue(allPaidValues));
+
+        const totalByVicePrefeito = this.records.totalByViceMayor(arr);
+        totalByVicePrefeito.forEach((el) => store.dispatch(addViceMayorEntry(el)));
+
+        const totalByPrefeito = this.records.totalByMayor(arr);
+        totalByPrefeito.forEach((el) => store.dispatch(addMayorEntry(el)));
+
+        const orderedRecords = this.records.orderByMonth(arr);
+        orderedRecords.forEach((el) => store.dispatch(addNewRecord(el)));
+    }
 
     handleChange(value) {
-        this.setState({ year: value });
+        store.dispatch(
+            updateYear(value)
+        );
+
+        this.api
+            .getByResourceId(value)
+            .then((data) => this.handleResources(data.records))
+            .catch((err) => console.error(err));
     }
 
     handleSearch(value) {
-        this.setState({ keyword: value });
+        store.dispatch(
+            updateKeyword(value)
+        );
     }
 
     render() {

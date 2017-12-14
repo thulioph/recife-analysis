@@ -1,37 +1,10 @@
 import React from 'react';
 
-import RecifeApi from '../../utils/api/recife';
-
 // ====
 
 class Table extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            allPaidValues: 0,
-            totalByPrefeito: [],
-            totalByVicePrefeito: [],
-            allRecords: [],
-        };
-
-        this.api = new RecifeApi();
-    }
-
-    buildPaidValues(arr) {
-        return arr.map((el) => Number(parseInt(el.valor_pago))).reduce((a, b) => a + b, 0);
-    }
-
-    buildTotalByPrefeito(arr) {
-        return arr.filter((el) => el.orgao_codigo === '10');
-    }
-
-    buildTotalByVicePrefeito(arr) {
-        return arr.filter((el) => el.orgao_codigo === '12');
-    }
-
-    orderByMonth(arr) {
-        return arr.sort((a, b) => a.mes_movimentacao - b.mes_movimentacao);
+    handleClick(obj) {
+        console.table(obj);
     }
 
     buildPaidValue(value) {
@@ -40,30 +13,8 @@ class Table extends React.Component {
         });
     }
 
-    handleClick(obj) {
-        console.warn(obj);
-    }
-
-    componentDidMount() {
-        this.api.getAllData().then((arr) => {
-            const recordsArr = arr.records;
-
-            const allPaidValues = this.buildPaidValues(recordsArr);
-            const totalByPrefeito = this.buildTotalByPrefeito(recordsArr);
-            const totalByVicePrefeito = this.buildTotalByVicePrefeito(recordsArr);
-            const orderedRecords = this.orderByMonth(recordsArr);
-
-            this.setState({
-                allPaidValues,
-                totalByPrefeito,
-                totalByVicePrefeito,
-                allRecords: orderedRecords,
-            });
-        }).catch((err) => console.error(err));
-    }
-
     render() {
-        const { allRecords } = this.state;
+        const { rows } = this.props;
 
         return (
             <section className="section">
@@ -81,7 +32,7 @@ class Table extends React.Component {
                     </thead>
 
                     <tbody>
-                        {allRecords.map((el) => (
+                        {rows.map((el) => (
                             <tr key={el._id}>
                                 <td>{el.mes_movimentacao}/{el.ano_movimentacao}</td>
                                 <td>{this.buildPaidValue(el.valor_pago)}</td>
