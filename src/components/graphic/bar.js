@@ -1,9 +1,10 @@
 import React from 'react';
+import * as d3 from 'd3';
 
 // ====
 
 let margin = { top: 0, right: 50, bottom: 30, left: 0 };
-let width = screen.width;
+let width = window.screen.width;
 let height = 300 - 50;
 
 let x = d3.scaleBand().range([0, width]).paddingInner(0.1);
@@ -21,7 +22,7 @@ const viz = svg
 
 class GraphicBar extends React.Component {
     displayMoreInformation(obj) {
-        console.warn(`O custo foi de: ${buildPaidValue(obj.valor_pago)}`);
+        console.warn(`O custo foi de: ${this.buildPaidValue(obj.valor_pago)}`);
     }
 
     buildRecordsGraphic(arr) {
@@ -38,13 +39,13 @@ class GraphicBar extends React.Component {
             .attr('x', (obj) => x(obj.mes_movimentacao))
             .attr('width', x.bandwidth())
             .attr('y', (obj) => y(parseInt(obj.valor_pago)))
-            .attr('height', (obj) => buildHeightBar(parseInt(obj.valor_pago)))
+            .attr('height', (obj) => this.buildHeightBar(parseInt(obj.valor_pago)))
             .style('fill', (obj) => {
                 if (parseInt(obj.valor_pago) <= 0) {
                     return '#F00'; // negative
                 }
             })
-            .on('click', (obj) => displayMoreInformation(obj));
+            .on('click', (obj) => this.displayMoreInformation(obj));
 
         // add the xAxis
         viz.append('g').attr('transform', "translate(0," + height + ")").call(d3.axisBottom(x));
