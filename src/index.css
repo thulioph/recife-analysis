@@ -9,6 +9,15 @@ body {
   cursor: pointer;
 }
 
+.arc text {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.arc path {
+  stroke: #fff;
+}
+
 .navbar {
   border-bottom: 1px solid #ccc;
 }

@@ -5,6 +5,7 @@ import Navbar from '../../components/navbar';
 import Resume from '../../components/resume';
 
 import GraphicBar from '../../components/graphic/bar';
+import GraphicPie from '../../components/graphic/pie';
 
 // ====
 
@@ -37,9 +38,9 @@ class Graphic extends React.Component {
                     
                     <div className="container is-fluid">
                         <h1 className="title">Gráficos</h1>
-                        <h2 className="subtitle">Mês x Valor Pago</h2>
+                        <h2 className="subtitle"></h2>
 
-                        <GraphicBar data={allRecords} />
+                        <GraphicPie data={allRecords} />
                     </div>
                 </section>
             </div>
