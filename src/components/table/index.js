@@ -1,11 +1,19 @@
 import React from 'react';
 
+import Records from '../../utils/records';
+
 import store from '../../store';
 import { displayModal, updateModalContent } from '../../actions/system';
 
 // ====
 
 class Table extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.records = new Records();
+    }
+
     handleClick(obj) {
         store.dispatch(
             updateModalContent(obj)
@@ -14,12 +22,6 @@ class Table extends React.Component {
         store.dispatch(
             displayModal(true)
         );
-    }
-
-    buildPaidValue(value) {
-        return Number(parseInt(value, 10)).toLocaleString("pt-BR", {
-            minimumFractionDigits: 2, style: 'currency', currency: 'BRL'
-        });
     }
 
     render() {
@@ -44,7 +46,7 @@ class Table extends React.Component {
                         {rows.map((el) => (
                             <tr key={el._id}>
                                 <td>{el.mes_movimentacao}/{el.ano_movimentacao}</td>
-                                <td>{this.buildPaidValue(el.valor_pago)}</td>
+                                <td>{this.records.buildPaidValue(el.valor_pago)}</td>
                                 <td>{el.orgao_nome}</td>
                                 <td>{el.elemento_nome}</td>
                                 <td>{el.subelemento_nome}</td>

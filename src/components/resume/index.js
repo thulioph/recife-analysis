@@ -1,12 +1,13 @@
 import React from 'react';
+import Records from '../../utils/records';
 
 // ====
 
 class Resume extends React.Component {
-    buildPaidValue(value) {
-        return Number(parseInt(value, 10)).toLocaleString("pt-BR", {
-            minimumFractionDigits: 2, style: 'currency', currency: 'BRL'
-        });
+    constructor(props) {
+        super(props);
+        
+        this.records = new Records();
     }
 
     render() {
@@ -21,7 +22,7 @@ class Resume extends React.Component {
                     <div className="container">
                         <nav className="level">
                             <div className="level-item has-text-centered">
-                                <div id="total-box">
+                                <div>
                                     <p className="heading">Movimentações</p>
                                     <p className="title">
                                         {allRecords.length}
@@ -30,23 +31,23 @@ class Resume extends React.Component {
                             </div>
 
                             <div className="level-item has-text-centered">
-                                <div id="total-paid-box">
+                                <div>
                                     <p className="heading">Gasto anual</p>
                                     <p className="title">
-                                        {this.buildPaidValue(allPaidValue)}
+                                        {this.records.buildPaidValue(allPaidValue)}
                                     </p>
                                 </div>
                             </div>
 
                             <div className="level-item has-text-centered">
-                                <div id="total-prefeito-box">
+                                <div>
                                     <p className="heading">Transações do Prefeito</p>
                                     <p className="title">{allMayorEntry.length}</p>
                                 </div>
                             </div>
 
                             <div className="level-item has-text-centered">
-                                <div id="total-vice-prefeito-box">
+                                <div>
                                     <p className="heading">Transações do Vice Prefeito</p>
                                     <p className="title">{allViceMayorEntry.length}</p>
                                 </div>
