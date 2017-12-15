@@ -14,6 +14,14 @@ class Records {
     totalByMayor(arr) {
         return arr.filter((el) => el.orgao_codigo === '10');
     }
+
+    buildPaidValue(value) {
+        return Number(parseInt(value, 10)).toLocaleString('pt-BR', {
+            minimumFractionDigits: 2, 
+            style: 'currency', 
+            currency: 'BRL'
+        });
+    }
 }
 
 export default Records;
