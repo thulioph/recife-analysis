@@ -8,3 +8,11 @@ body {
   fill: steelblue;
   cursor: pointer;
 }
+
+.navbar {
+  border-bottom: 1px solid #ccc;
+}
+
+.navbar-item.is-active {
+  background-color: #DDDDDD;
+}
