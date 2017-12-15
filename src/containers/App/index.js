@@ -67,7 +67,7 @@ class App extends React.Component {
         
         <Table rows={allRecords} />
 
-        <GraphicBar />
+        <GraphicBar data={allRecords} />
         
         <Modal 
           isActive={modalIsActive} 
