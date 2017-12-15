@@ -3,7 +3,7 @@ const initialState = {
     allPaidValue: 0,
     allRecords: [],
     allMayorEntry: [],
-    allViceMayorEntry: []
+    allViceMayorEntry: [],
 };
 
 // action type
