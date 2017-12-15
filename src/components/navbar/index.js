@@ -1,24 +1,32 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+
+// ====
 
 class Navbar extends React.Component {
     render() {
+        const { pathname } = this.props;
+
         return(
             <nav className="navbar">
                 <div className="navbar-brand">
                     <a className="navbar-item" href="https://bulma.io">
-                        <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: a modern CSS framework based on Flexbox" />
+                        <img 
+                            src="https://bulma.io/images/bulma-logo.png" 
+                            alt="Bulma: a modern CSS framework based on Flexbox" 
+                        />
                     </a>
                 </div>
 
                 <div className="navbar-menu">
                     <div className="navbar-start">
-                        <a className="navbar-item" href="https://bulma.io/">
+                        <Link to="/" className={pathname === '/' ? 'navbar-item is-active' : 'navbar-item'}>
                             Tabela
-                        </a>
+                        </Link>
 
-                        <a className="navbar-item" href="https://bulma.io/">
+                        <Link to="/graphics" className={pathname === '/graphics' ? 'navbar-item is-active' : 'navbar-item'}>
                             Gráficos
-                        </a>
+                        </Link>
                     </div>
                 </div>
 
@@ -52,5 +60,7 @@ class Navbar extends React.Component {
         )
     }
 };
+
+// ====
 
 export default Navbar;

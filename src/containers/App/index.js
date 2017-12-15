@@ -8,7 +8,6 @@ import Resume from '../../components/resume';
 import Search from '../../components/search';
 import Table from '../../components/table';
 import Modal from '../../components/modal';
-import GraphicBar from '../../components/graphic/bar.js';
 
 import RecifeApi from '../../utils/api/recife';
 import Records from '../../utils/records';
@@ -49,25 +48,24 @@ class App extends React.Component {
     const { 
       allRecords, allMayorEntry, 
       allViceMayorEntry, allPaidValue,
-      modalIsActive, modalContent
+      modalIsActive, modalContent, 
+      pathname
     } = this.props;
 
     return (
       <div>
-        <Navbar />
-        
-        <Resume 
-          allRecords={allRecords}
-          allMayorEntry={allMayorEntry}
-          allViceMayorEntry={allViceMayorEntry}
-          allPaidValue={allPaidValue}
+        <Navbar pathname={pathname} />
+
+        <Resume
+          boxOne={{ 'title': 'Movimentações', 'amount': allRecords.length}}
+          boxTwo={{ 'title': 'Gasto anual', 'amount': this.records.buildPaidValue(allPaidValue)}}
+          boxTree={{ 'title': 'Transações do Prefeito', 'amount': allMayorEntry.length}}
+          boxFour={{ 'title': 'Transações do Vice Prefeito', 'amount': allViceMayorEntry.length}}
         />
         
         <Search />
         
         <Table rows={allRecords} />
-
-        <GraphicBar data={allRecords} />
         
         <Modal 
           isActive={modalIsActive} 

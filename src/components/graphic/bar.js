@@ -3,6 +3,9 @@ import * as d3 from 'd3';
 
 import Records from '../../utils/records';
 
+import store from '../../store';
+import { changeBarCurrentValue } from '../../actions/graphic';
+
 // ====
 
 let width = window.screen.width;
@@ -29,9 +32,9 @@ class GraphicBar extends React.Component {
     }
 
     displayMoreInformation(obj) {
-        console.warn(
-            `O custo foi de: ${this.records.buildPaidValue(obj.valor_pago)}
-        `);
+        store.dispatch(
+            changeBarCurrentValue(this.records.buildPaidValue(obj.valor_pago))
+        );
     }
 
     buildRecordsGraphic(arr, viz, x, y) {
@@ -66,7 +69,7 @@ class GraphicBar extends React.Component {
         if (value !== 0 && Math.sign(value) === 1) {
             return height - y(value);
         } else {
-            console.warn('diferente', value);
+            // console.warn('diferente', value);
             return y(Math.abs(value));
         }
     }
@@ -101,19 +104,11 @@ class GraphicBar extends React.Component {
 
     render() {
         return(
-            <section className="section">
-                <div className="container is-fluid">
-                    <h1 className="title">Gráficos</h1>
-                </div>
-
-                <aside className="graphics">
-                    <svg 
-                        ref={node => this.node = node}
-                        width={500}
-                        height={500}>
-                    </svg>
-                </aside>
-            </section>
+            <svg 
+                ref={node => this.node = node}
+                width={500}
+                height={500}>
+            </svg>
         );
     }
 }
