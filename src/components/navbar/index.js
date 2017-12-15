@@ -10,6 +10,18 @@ class Navbar extends React.Component {
                     </a>
                 </div>
 
+                <div className="navbar-menu">
+                    <div className="navbar-start">
+                        <a className="navbar-item" href="https://bulma.io/">
+                            Tabela
+                        </a>
+
+                        <a className="navbar-item" href="https://bulma.io/">
+                            Gráficos
+                        </a>
+                    </div>
+                </div>
+
                 <div className="navbar-end">
                     <div className="navbar-item">
                         <div className="field is-grouped">
