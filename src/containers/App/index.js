@@ -11,6 +11,7 @@ import Modal from '../../components/modal';
 
 import RecifeApi from '../../utils/api/recife';
 import Records from '../../utils/records';
+import Storage from '../../utils/storage';
 
 import store from '../../store';
 import { 
@@ -26,22 +27,38 @@ class App extends React.Component {
     
     this.api = new RecifeApi();
     this.records = new Records();
+
+    this.storage = new Storage('api_data');
+
+    this.handleData = this.handleData.bind(this);
+  }
+
+  handleData(arr) {
+    this.storage.save(arr);
+
+    const allPaidValues = this.records.totalPaidValues(arr.records);
+    store.dispatch(updatePaidValue(allPaidValues));
+
+    const totalByVicePrefeito = this.records.totalByViceMayor(arr.records);
+    totalByVicePrefeito.forEach((el) => store.dispatch(addViceMayorEntry(el)));
+    
+    const totalByPrefeito = this.records.totalByMayor(arr.records);
+    totalByPrefeito.forEach((el) => store.dispatch(addMayorEntry(el)));
+
+    const orderedRecords = this.records.orderByMonth(arr.records);
+    orderedRecords.forEach((el) => store.dispatch(addNewRecord(el)));
   }
 
   componentDidMount() {
-    this.api.getAllData().then((arr) => {
-      const allPaidValues = this.records.totalPaidValues(arr.records);
-      store.dispatch(updatePaidValue(allPaidValues));
+    const storageData = this.storage.get();
 
-      const totalByVicePrefeito = this.records.totalByViceMayor(arr.records);
-      totalByVicePrefeito.forEach((el) => store.dispatch(addViceMayorEntry(el)));
-      
-      const totalByPrefeito = this.records.totalByMayor(arr.records);
-      totalByPrefeito.forEach((el) => store.dispatch(addMayorEntry(el)));
-
-      const orderedRecords = this.records.orderByMonth(arr.records);
-      orderedRecords.forEach((el) => store.dispatch(addNewRecord(el)));
-    }).catch((err) => console.error(err));
+    if (storageData) {
+      this.handleData(storageData);
+    } else {
+      this.api.getAllData()
+        .then((arr) => this.handleData(arr))
+        .catch((err) => console.error(err));
+    }
   }
 
   render() {
