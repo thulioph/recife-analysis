@@ -3,15 +3,30 @@ import { connect } from 'react-redux';
 
 import Navbar from '../../components/navbar';
 import Resume from '../../components/resume';
-
 import GraphicBar from '../../components/graphic/bar';
 import GraphicPie from '../../components/graphic/pie';
+
+import Storage from '../../utils/storage';
 
 // ====
 
 class Graphic extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.storage = new Storage('api_data');
+    }
+
+    componentDidMount() {
+        this.data = this.storage.get();
+    }
+
     render() {
-        const { allRecords, pathname, barCurrentValue } = this.props;
+        let { allRecords, pathname, barCurrentValue } = this.props;
+
+        if (allRecords) {
+            allRecords = this.storage.get().records;
+        }
 
         return(
             <div>
