@@ -14,10 +14,6 @@ body {
   text-anchor: middle;
 }
 
-.arc path {
-  stroke: #fff;
-}
-
 .navbar {
   border-bottom: 1px solid #ccc;
 }
