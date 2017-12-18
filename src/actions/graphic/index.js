@@ -15,8 +15,6 @@ export const changeBarCurrentValue = (val) => ({
 export default (state = initialState, action) => {
     const { type, payload } = action;
 
-    console.log(payload);
-
     switch (type) {
         case CHANGE_CURRENT_VALUE_BAR:
             return {
