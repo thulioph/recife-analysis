@@ -11,22 +11,18 @@ class GraphicBar extends React.Component {
         this.buildChartPie = this.buildChartPie.bind(this);
     }
 
-    buildChartPie(g, pie, data, path, label, color) {
+    buildChartPie(g, pie, path, label, color, data) {
         const arc = g.selectAll('.arc').data(pie(data)).enter().append('g').attr('class', 'arc');
         
-        arc.append('path').attr('d', path).attr('fill', (d) => Number(parseInt(d.data.valor_pago, 10)) ? color(Number(parseInt(d.data.valor_pago, 10))) : false);
+        arc.append('path')
+            .attr('d', path)
+            .attr('fill', (d) => Number(parseInt(d.data.valor_pago, 10)) ? color(Number(parseInt(d.data.valor_pago, 10))) : false);
 
-        arc.append('text').attr('transform', (d) => "translate(" + label.centroid(d) + ")").attr('dy', '0.1em').text((d) => d.data.subelemento_codigo);
+        arc.append('text')
+            .attr('transform', (d) => "translate(" + label.centroid(d) + ")")
+            .attr('dy', '0.35em')
+            .text((d) => d.data.subelemento_nome);
     }
-
-    // buildChartPie(g, pie, arc, arcData) {
-    //     g.selectAll('.arc').data(arcData).enter().append('g').attr('class', 'arc');
-    //     debugger;
-        
-    //     // arc.append('path').attr('d', path).attr('fill', (d) => d.data.valor_pago ? color(d.data.valor_pago) : false);
-
-    //     // arc.append('text').attr('transform', (d) => "translate(" + label.centroid(d) + ")").attr('dy', '0.35em').text((d) => d.data.valor_pago);
-    // }
 
     createCharPie(data) {
         const svg = d3.select(this.node);
@@ -47,13 +43,10 @@ class GraphicBar extends React.Component {
         const g = svg.append('g').attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
 
         const pie = d3.pie().value((el) => Number(parseInt(el.valor_pago, 10))).sort((a, b) => a.subelemento_codigo.localeCompare(b.subelemento_codigo));
-        const path = d3.arc().outerRadius(100).innerRadius(20);
+        const path = d3.arc().outerRadius(radius -10).innerRadius(0);
         const label = d3.arc().outerRadius(radius - 40).innerRadius(radius - 40);
-        
-        // const arcData = pie(data);
 
-        // this.buildChartPie(g, pie, arc, arcData);
-        this.buildChartPie(g, pie, data, path, label, color);
+        this.buildChartPie(g, pie, path, label, color, data);
     }
 
     componentDidMount() {
