@@ -8,27 +8,17 @@ import { changeBarCurrentValue } from '../../actions/graphic';
 
 // ====
 
-let width = window.screen.width;
-let height = 300 - 50;
-
 class GraphicBar extends React.Component {
     constructor(props) {
         super(props);
 
-        this.margin = { 
-            top: 0, 
-            right: 50, 
-            bottom: 30, 
-            left: 0
-        };
-
         this.records = new Records();
 
-        this.createCharBar = this.createCharBar.bind(this);
+        this.margin = {top: 20, right: 20, bottom: 30, left: 80};
 
-        this.buildHeightBar = this.buildHeightBar.bind(this);
-        this.buildRecordsGraphic = this.buildRecordsGraphic.bind(this);
+        this.createCharBar = this.createCharBar.bind(this);
         this.displayMoreInformation = this.displayMoreInformation.bind(this);
+        this.buildChart = this.buildChart.bind(this);
     }
 
     displayMoreInformation(obj) {
@@ -37,58 +27,55 @@ class GraphicBar extends React.Component {
         );
     }
 
-    buildHeightBar(value, y) {
-        if (value !== 0 && Math.sign(value) === 1) {
-            return height - y(value);
-        } else {
-            // console.warn('diferente', value);
-            return height - y(Math.abs(value));
-        }
-    }
+    buildChart(data, svg, width, height, tooltip, x, y, g) {
+        data.sort((a, b) => parseInt(b.mes_movimentacao, 10) - parseInt(a.mes_movimentacao, 10));
 
-    buildRecordsGraphic(arr, viz, x, y) {
-        x.domain(arr.map((obj) => obj.mes_movimentacao).sort((a, b) => a - b));
-        y.domain([0, d3.max(arr, ((obj) => parseInt(obj.valor_pago, 10)))]);
+        x.domain([0, d3.max(data, (el) => parseInt(el.valor_pago, 10))]);
+        y.domain(data.map((el) => el.mes_movimentacao)).padding(0.2);
 
-        // add the rectangles
-        viz.selectAll('.bar')
-            .remove().exit() // clear the last data
-            .data(arr).enter() // call the new data
-            .append('rect')
-                .attr('class', 'bar')
-                .attr('x', (obj) => x(obj.mes_movimentacao))
-                .attr('width', x.bandwidth())
-                .attr('y', (obj) => y(parseInt(obj.valor_pago, 10)))
-                .attr('height', (obj) => this.buildHeightBar(parseInt(obj.valor_pago, 10), y))
-                .style('fill', (obj) => {
-                    if (parseInt(obj.valor_pago, 10) <= 0) {
-                        return '#F00'; // negative
-                    }
-                })
-            .on('click', (obj) => this.displayMoreInformation(obj));
+        g.append('g')
+            .attr('class', 'x axis')
+            .attr('transform', `translate(0, ${height})`)
+            .call(d3.axisBottom(x).ticks(5).tickFormat((el) => parseInt(el / 1000)).tickSizeInner([-height]));
+        
+        g.append('g')
+            .attr('class', 'y axis')
+            .call(d3.axisLeft(y));
 
-        // add the xAxis
-        viz.append('g').attr('transform', "translate(0," + height + ")").call(d3.axisBottom(x));
-
-        // add the yAxis
-        viz.append('g').call(d3.axisLeft(y).ticks(10));
+        g.selectAll('.bar')
+            .data(data)
+            .enter().append('rect')
+            .attr('class', 'bar')
+            .attr('x', 0)
+            .attr('height', y.bandwidth())
+            .attr('y', (el) => y(el.mes_movimentacao))
+            .attr('width', (el) => x(Math.abs(parseInt(el.valor_pago, 10))))
+            .on('mousemove', (el) => {
+                tooltip
+                    .style('left', `${(d3.event.pageX - 50)}px`)
+                    .style('top', `${(d3.event.pageY - 70)}px`)
+                    .style('display', 'inline-block')
+                    .html(
+                        (this.records.buildPaidValue(el.valor_pago))
+                    )
+            })
+            .on('mouseout', () => tooltip.style('display', 'none'));
     }
 
     createCharBar(data) {
-        const x = d3.scaleBand().range([0, width]).paddingInner(0.2);
-        const y = d3.scaleLinear().range([height, 0]);
+        const svg = d3.select(this.node);
 
-        const viz = d3.select(this.node);
+        const width = svg.attr('width') - this.margin.left - this.margin.right;
+        const height = svg.attr('height') - this.margin.top - this.margin.bottom;
 
-        viz.attr('width', width + this.margin.left + this.margin.right)
-            .attr('height', height + this.margin.top + this.margin.bottom)
-            .append('g')
-            .attr('transform', "translate(" + this.margin.left + "," + this.margin.top + ")");
+        const tooltip = d3.select('body').append('div').attr('class', 'tooltip');
+        
+        const x = d3.scaleLinear().range([0, width]);
+        const y = d3.scaleBand().range([height, 0]);
 
-        // avoid the graphic to render many times getting the size of array
-        if (data.length > 99) {
-            this.buildRecordsGraphic(data, viz, x, y);
-        }
+        const g = svg.append('g').attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
+
+        this.buildChart(data, svg, width, height, tooltip, x, y, g);
     }
 
     componentDidMount() {
@@ -105,7 +92,7 @@ class GraphicBar extends React.Component {
         return(
             <svg 
                 ref={node => this.node = node}
-                width={500}
+                width={960}
                 height={500}>
             </svg>
         );

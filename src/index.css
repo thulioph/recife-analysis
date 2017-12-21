@@ -4,11 +4,6 @@ body {
   font-family: sans-serif;
 }
 
-.bar { 
-  fill: steelblue;
-  cursor: pointer;
-}
-
 .arc text {
   font: 10px sans-serif;
   text-anchor: middle;
@@ -31,4 +26,30 @@ body {
 
 .arc path {
   stroke: #fff;
+}
+
+/*  bar graphic */
+
+.bar {
+	fill: #6F257F;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #D4D8DA;
+  stroke-width: 1px;
+  shape-rendering: crispEdges;
+}
+.x path {
+	display: none;
+}
+.tooltip {
+	position: absolute;
+  display: none;
+  min-width: 80px;
+  height: auto;
+  background: none repeat scroll 0 0 #F1F3F3;
+  border: 1px solid #6F257F;
+  padding: 14px;
+  text-align: center;
 }
