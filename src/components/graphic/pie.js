@@ -11,43 +11,68 @@ class GraphicBar extends React.Component {
         this.buildChartPie = this.buildChartPie.bind(this);
     }
 
-    buildChartPie(g, pie, path, label, color, data) {
-        const arc = g.selectAll('.arc').data(pie(data)).enter().append('g').attr('class', 'arc');
-        
-        arc.append('path')
-            .attr('d', path)
-            .attr('fill', (d) => Number(parseInt(d.data.valor_pago, 10)) ? color(Number(parseInt(d.data.valor_pago, 10))) : false);
-
-        arc.append('text')
-            .attr('transform', (d) => `translate(${label.centroid(d)})`)
-            .attr('dy', '0.35em')
-            .text((d) => d.data.subelemento_codigo);
-    }
+    buildChartPie() {}
 
     createCharPie(data) {
-        const svg = d3.select(this.node);
-        const width = svg.attr('width');
-        const height = svg.attr('height');
-        const radius = Math.min(width, height) / 2;
-        
-        const color = d3.scaleOrdinal([
-            "#98ABC5", 
-            "#8A89A6", 
-            "#7B6888", 
-            "#6B486B", 
-            "#A05D56", 
-            "#D0743C", 
-            "#FF8C00"
-        ]);
-        
+        const width = 400;
+        const height = 400;
+        const thickness = 40;
+        const duration = 750;
+        const padding = 10;
+        const opacity = .8;
+        const opacityHover = 1;
+        const otherOpacityOnHover = .8;
+        const tooltipMargin = 13;
+
+        const radius = Math.min(width-padding, height-padding) / 2;
+        const color = d3.scaleOrdinal(d3.schemeCategory10);
+
+        const svg = d3.select(this.node).attr('class', 'pie').attr('width', width).attr('height', height);
         const g = svg.append('g').attr('transform', `translate(${width/2}, ${height/2})`);
 
-        const pie = d3.pie().value((el) => parseInt(el.valor_pago, 10)).sort((a, b) => a.valor_pago.localeCompare(b.valor_pago));
-        
-        const path = d3.arc().outerRadius(radius -10).innerRadius(0);
-        const label = d3.arc().outerRadius(radius - 20).innerRadius(radius - 20);
+        const arc = d3.arc().innerRadius(0).outerRadius(radius);
+        const pie = d3.pie().value((d) => parseInt(d.valor_pago, 10)).sort(null);
 
-        this.buildChartPie(g, pie, path, label, color, data);
+        const path = g.selectAll('path')
+                        .data(pie(data))
+                        .enter()
+                        .append('g')
+                        .append('path')
+                        .attr('d', arc)
+                        .attr('fill', (d, i) => color(i))
+                        .style('opacity', opacity)
+                        .style('stroke', 'white')
+                        .on('mouseover', (el) => {})
+                        .on('mousemove', (el) => {})
+                        .on('mouseout', (el) => {})
+        
+        let legend = d3.select('#bar-wrapper').append('div')
+                        .attr('class', 'legend')
+                        .style('margin-top', '30px')
+                        .style('overflow', 'scroll')
+                        .style('height', '190px');
+
+        let keys = legend.selectAll('.keys')
+                        .data(data)
+                        .enter()
+                        .append('div')
+                        .attr('class', 'key')
+                        .style('display', 'flex')
+                        .style('align-items', 'center')
+                        .style('margin-right', '20px');
+        
+        keys.append('div')
+			.attr('class', 'symbol')
+			.style('height', '10px')
+			.style('width', '10px')
+			.style('margin', '5px 5px')
+            .style('background-color', (d, i) => color(i));
+            
+        keys.append('div')
+            .attr('class', 'name')
+            .text(d => `${d.grupo_despesa_nome} (${d.valor_pago})`);
+        
+        keys.exit().remove();
     }
 
     componentDidMount() {
@@ -62,11 +87,13 @@ class GraphicBar extends React.Component {
 
     render() {
         return (
-            <svg
-                ref={node => this.node = node}
-                width={500}
-                height={500}>
-            </svg>
+            <aside id="bar-wrapper">
+                <svg
+                    ref={node => this.node = node}
+                    width={800}
+                    height={400}>
+                </svg>
+            </aside>
         );
     }
 }

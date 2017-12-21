@@ -53,3 +53,23 @@ body {
   padding: 14px;
   text-align: center;
 }
+
+/* pie chart  */
+
+.legend {
+  font-family: "Verdana";
+  font-size: .7em;
+}
+
+.pie text {
+  font-family: "Verdana";
+  fill: #000;
+}
+
+.pie .name-text{
+  font-size: .8em;
+}
+
+.pie .value-text{
+  font-size: 3em;
+}
