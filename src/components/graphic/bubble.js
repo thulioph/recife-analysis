@@ -51,10 +51,12 @@ class Bubble extends React.Component {
         node.append('text')
             .attr('clipPath', (el) => `url(#clip-${el.data._id})`)
             .selectAll('tspan')
-            .data((el) => el.data.mes_movimentacao)
+            .data((el) => el.data.subelemento_nome.split(' ')[0])
             .enter()
             .append('tspan')
             .style('text-align', 'center')
+            .style('font-size', '10')
+            .style('text-anchor', 'middle')
             .text((el) => el);
 
         node.append('title')
@@ -80,7 +82,7 @@ class Bubble extends React.Component {
         const height = svg.attr('height');
 
         const color = d3.scaleOrdinal(d3.schemeCategory20c);
-        const pack = d3.pack().size([width, height]).padding(2.5);
+        const pack = d3.pack().size([width, height]).padding(0.5);
 
         this.buildBubbleChart(svg, color, pack, data);
     }
@@ -108,8 +110,7 @@ class Bubble extends React.Component {
                 <svg
                     ref={node => this.node = node}
                     width={960}
-                    height={960}
-                    textAnchor="middle">
+                    height={960}>
                 </svg>
             </div>
         );
