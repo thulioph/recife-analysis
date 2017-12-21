@@ -19,9 +19,9 @@ class GraphicBar extends React.Component {
             .attr('fill', (d) => Number(parseInt(d.data.valor_pago, 10)) ? color(Number(parseInt(d.data.valor_pago, 10))) : false);
 
         arc.append('text')
-            .attr('transform', (d) => "translate(" + label.centroid(d) + ")")
+            .attr('transform', (d) => `translate(${label.centroid(d)})`)
             .attr('dy', '0.35em')
-            .text((d) => d.data.subelemento_nome);
+            .text((d) => d.data.subelemento_codigo);
     }
 
     createCharPie(data) {
@@ -40,11 +40,12 @@ class GraphicBar extends React.Component {
             "#FF8C00"
         ]);
         
-        const g = svg.append('g').attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+        const g = svg.append('g').attr('transform', `translate(${width/2}, ${height/2})`);
 
-        const pie = d3.pie().value((el) => Number(parseInt(el.valor_pago, 10))).sort((a, b) => a.subelemento_codigo.localeCompare(b.subelemento_codigo));
+        const pie = d3.pie().value((el) => parseInt(el.valor_pago, 10)).sort((a, b) => a.valor_pago.localeCompare(b.valor_pago));
+        
         const path = d3.arc().outerRadius(radius -10).innerRadius(0);
-        const label = d3.arc().outerRadius(radius - 40).innerRadius(radius - 40);
+        const label = d3.arc().outerRadius(radius - 20).innerRadius(radius - 20);
 
         this.buildChartPie(g, pie, path, label, color, data);
     }
