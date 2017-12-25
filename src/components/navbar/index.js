@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 // ====
 
@@ -16,18 +15,6 @@ class Navbar extends React.Component {
                             alt="Bulma: a modern CSS framework based on Flexbox" 
                         />
                     </a>
-                </div>
-
-                <div className="navbar-menu">
-                    <div className="navbar-start">
-                        <Link to="/" className={pathname === '/' ? 'navbar-item is-active' : 'navbar-item'}>
-                            Tabela
-                        </Link>
-
-                        <Link to="/graphics" className={pathname === '/graphics' ? 'navbar-item is-active' : 'navbar-item'}>
-                            Gráficos
-                        </Link>
-                    </div>
                 </div>
 
                 <div className="navbar-end">

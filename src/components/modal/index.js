@@ -21,7 +21,7 @@ class Modal extends React.Component {
                 <div className="modal-background"></div>
                 <div className="modal-card">
                     <header className="modal-card-head">
-                        <p className="modal-card-title">{content.unidade_nome}</p>
+                        <p className="modal-card-title">{content.orgao_nome}</p>
                     </header>
 
                     <section className="modal-card-body">
@@ -33,7 +33,7 @@ class Modal extends React.Component {
                                 <tr><td>{content.subelemento_nome}</td></tr>
                                 <tr><td>{content.categoria_economica_nome}</td></tr>
 
-                                <tr><td>{content.orgao_nome}</td></tr>
+                                <tr><td>{content.unidade_nome}</td></tr>
                                 <tr><td>{content.acao_nome}</td></tr>
                                 <tr><td>{content.elemento_nome}</td></tr>
                                 <tr><td>{content.funcao_nome}</td></tr>

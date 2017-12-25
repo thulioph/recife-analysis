@@ -5,9 +5,9 @@ import './App.css';
 
 import Navbar from '../../components/navbar';
 import Resume from '../../components/resume';
-import Search from '../../components/search';
 import Table from '../../components/table';
 import Modal from '../../components/modal';
+import Menu from '../../components/menu';
 
 import RecifeApi from '../../utils/api/recife';
 import Records from '../../utils/records';
@@ -71,19 +71,51 @@ class App extends React.Component {
 
     return (
       <div>
-        <Navbar pathname={pathname} />
+        <Navbar />
 
-        <Resume
-          boxOne={{ 'title': 'Movimentações', 'amount': allRecords.length}}
-          boxTwo={{ 'title': 'Gasto anual', 'amount': this.records.buildPaidValue(allPaidValue)}}
-          boxTree={{ 'title': 'Transações do Prefeito', 'amount': allMayorEntry.length}}
-          boxFour={{ 'title': 'Transações do Vice Prefeito', 'amount': allViceMayorEntry.length}}
-        />
-        
-        <Search />
-        
-        <Table rows={allRecords} />
-        
+        <section className="hero is-medium is-dark is-bold">
+          <div className="hero-body">
+            <div className="container">
+              <h1 className="title">Análise</h1>
+              <h2 className="subtitle">Despesas Orçamentárias do <strong>Recife</strong>.</h2>
+            </div>
+          </div>
+        </section>
+
+        <section className="section resume-container">
+          <Resume
+            boxOne={{ 
+              'title': 'Movimentações', 
+              'amount': allRecords.length
+            }}
+
+            boxTwo={{ 
+              'title': 'Gasto anual', 
+              'amount': this.records.buildPaidValue(allPaidValue)
+            }}
+
+            boxTree={{
+              'title': 'Transações do Prefeito', 
+              'amount': allMayorEntry.length
+            }}
+
+            boxFour={{
+              'title': 'Transações do Vice Prefeito', 
+              'amount': allViceMayorEntry.length
+            }}
+          />
+        </section>
+
+        <section className="section app-container">
+          <div className="wrapper-menu">
+            <Menu pathname={pathname} />
+          </div>
+
+          <div className="section wrapper-content">
+            <Table rows={allRecords} />
+          </div>
+        </section>
+
         <Modal 
           isActive={modalIsActive} 
           content={modalContent}
@@ -101,7 +133,6 @@ export default connect(
     allMayorEntry: state.table.allMayorEntry,
     allViceMayorEntry: state.table.allViceMayorEntry,
     allPaidValue: state.table.allPaidValue,
-    year: state.search.year,
     modalIsActive: state.system.modalIsActive,
     modalContent: state.system.modalContent
   })

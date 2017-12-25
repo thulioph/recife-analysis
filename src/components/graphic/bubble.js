@@ -3,18 +3,12 @@ import * as d3 from 'd3';
 
 import Records from '../../utils/records';
 
+import store from '../../store';
+import { changeBubbleValue } from '../../actions/graphic';
+
 // ====
 
 class Bubble extends React.Component {
-    state = {
-        current: {
-            nome: '',
-            total: '',
-            unidade: '',
-            elemento: ''
-        }
-    };
-
     constructor(props) {
         super(props);
 
@@ -45,6 +39,9 @@ class Bubble extends React.Component {
             .on('click', (el) => this.updateOnClick(el))
             .on('mousemove', (el) => this.updateMouseMove(el, tooltip))
             .on('mouseout', (el) => tooltip.style('display', 'none'));
+        
+        // node.append('text')
+        //     .text((el) => `${el.data.mes_movimentacao}/${el.data.ano_movimentacao}`);
     }
 
     updateMouseMove(el, tooltip) {
@@ -61,14 +58,9 @@ class Bubble extends React.Component {
     }
 
     updateOnClick(el) {
-        this.setState({
-            current: {
-                nome: el.data.subelemento_nome,
-                total: this.utils.buildPaidValue(el.data.valor_pago),
-                unidade: el.data.unidade_nome,
-                elemento: el.data.elemento_nome
-            }
-        });
+        store.dispatch(
+            changeBubbleValue(el.data)
+        );
     }
 
     createBubbleChart(data) {
@@ -94,21 +86,12 @@ class Bubble extends React.Component {
     }
 
     render() {
-        const { current } = this.state;
-
         return (
-            <div>
-                <h4>{current.nome}</h4>
-                <h4>{current.total}</h4>
-                <h4>{current.unidade}</h4>
-                <h4>{current.elemento}</h4>
-
-                <svg
-                    ref={node => this.node = node}
-                    width={960}
-                    height={960}>
-                </svg>
-            </div>
+            <svg
+                ref={node => this.node = node}
+                width={960}
+                height={960}>
+            </svg>
         );
     }
 }

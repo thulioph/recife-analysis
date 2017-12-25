@@ -26,3 +26,27 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.app-container {
+  display: flex;
+}
+
+.wrapper-menu {
+  flex-shrink: 3;
+  flex-basis: 15%;
+}
+
+.wrapper-content {
+  padding-top: 0;
+  padding-right: 0;
+  
+  flex-shrink: 5;
+}
+
+.resume-container {
+  padding-bottom: 0;
+}
+
+.card-table tr td:first-child {
+  text-transform: uppercase;
+}
