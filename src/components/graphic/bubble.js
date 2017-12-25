@@ -21,11 +21,12 @@ class Bubble extends React.Component {
         this.createBubbleChart = this.createBubbleChart.bind(this);
         this.buildBubbleChart = this.buildBubbleChart.bind(this);
         this.updateMouseMove = this.updateMouseMove.bind(this);
+        this.updateOnClick = this.updateOnClick.bind(this);
 
         this.utils = new Records();
     }
 
-    buildBubbleChart(svg, color, pack, data) {
+    buildBubbleChart(svg, color, pack, data, tooltip) {
         const root = d3.hierarchy({children: data})
                         .sum((obj) => Number(parseInt(obj.valor_pago, 10)))
                         .each((el) => el.data._id);
@@ -41,31 +42,25 @@ class Bubble extends React.Component {
             .attr('id', (el) => el.data._id)
             .attr('r', (el) => el.r)
             .style('fill', (el) => color(el.data.mes_movimentacao))
-            .on('click', (el) => this.updateMouseMove(el));
-        
-        node.append('clipPath')
-            .attr('id', (el) => `clip-${el.data._id}`)
-            .append('use')
-            .attr('xlink:href', (el) => `#${el.data._id}`);
-
-        node.append('text')
-            .attr('clipPath', (el) => `url(#clip-${el.data._id})`)
-            .selectAll('tspan')
-            .data((el) => el.data.subelemento_nome.split(' ')[0])
-            .enter()
-            .append('tspan')
-            .style('text-align', 'center')
-            .style('font-size', '10')
-            .style('text-anchor', 'middle')
-            .text((el) => el);
-
-        node.append('title')
-            .text((el) => `${el.data.subelemento_nome} - ${this.utils.buildPaidValue(el.data.valor_pago)}`);
+            .on('click', (el) => this.updateOnClick(el))
+            .on('mousemove', (el) => this.updateMouseMove(el, tooltip))
+            .on('mouseout', (el) => tooltip.style('display', 'none'));
     }
 
-    updateMouseMove(el) {
-        // console.log(el.data.mes_movimentacao);
+    updateMouseMove(el, tooltip) {
+        tooltip
+            .style('left', `${(d3.event.pageX - 120)}px`)
+            .style('top', `${(d3.event.pageY - 160)}px`)
+            .style('display', 'inline-block')
+            .html(
+                `
+                    ${el.data.subelemento_nome} <br />
+                    <span>${this.utils.buildPaidValue(el.data.valor_pago)}</span>
+                `
+            )
+    }
 
+    updateOnClick(el) {
         this.setState({
             current: {
                 nome: el.data.subelemento_nome,
@@ -83,8 +78,9 @@ class Bubble extends React.Component {
 
         const color = d3.scaleOrdinal(d3.schemeCategory20c);
         const pack = d3.pack().size([width, height]).padding(0.5);
+        const tooltip = d3.select('body').append('aside').attr('class', 'tooltip ');
 
-        this.buildBubbleChart(svg, color, pack, data);
+        this.buildBubbleChart(svg, color, pack, data, tooltip);
     }
 
     componentDidMount() {

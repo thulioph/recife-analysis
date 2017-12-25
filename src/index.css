@@ -54,6 +54,15 @@ body {
   text-align: center;
 }
 
+.tooltip span {
+  font-weight: bold;
+}
+
+.node circle:hover {
+  stroke: black;
+  stroke-width: 2;
+}
+
 /* pie chart  */
 
 .legend {
